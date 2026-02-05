@@ -7,36 +7,6 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/PicToPDF/index.html"
-    },
-    {
-      "src": "/privacy-policy.html",
-      "dest": "/PicToPDF/privacy-policy.html"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/PicToPDF/assets/$1"
-    },
-    {
-      "src": "/css/(.*)",
-      "dest": "/PicToPDF/css/$1"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/PicToPDF/js/$1"
-    },
-    {
-      "src": "/(manifest.json|robots.txt|sitemap.xml|sw.js)",
-      "dest": "/PicToPDF/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/PicToPDF/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -64,7 +34,7 @@
       ]
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/PicToPDF/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -73,7 +43,7 @@
       ]
     },
     {
-      "source": "/(css|js)/(.*)",
+      "source": "/PicToPDF/(css|js)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -84,13 +54,18 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "destination": "/PicToPDF/",
+      "permanent": false
+    },
+    {
       "source": "/app",
-      "destination": "/#download",
+      "destination": "/PicToPDF/#download",
       "permanent": false
     },
     {
       "source": "/download",
-      "destination": "/#download",
+      "destination": "/PicToPDF/#download",
       "permanent": false
     }
   ],
