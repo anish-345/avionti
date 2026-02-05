@@ -723,23 +723,34 @@ section {
     justify-content: center;
     gap: var(--space-lg);
     margin: var(--space-2xl) 0;
+    flex-wrap: wrap;
 }
 
 .download-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-xl);
-    text-decoration: none;
-    color: white;
+    display: inline-block;
     transition: var(--transition);
-    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
 }
 
 .download-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: white;
     transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.store-badge {
+    height: 60px;
+    width: auto;
+    display: block;
+    border-radius: var(--radius-lg);
+}
+
+.google-play .store-badge {
+    height: 60px;
+}
+
+.indus-store .store-badge {
+    height: 60px;
 }
 
 .store-info {
