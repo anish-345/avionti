@@ -451,6 +451,65 @@ section {
     background: var(--background-light);
 }
 
+.problem-solution {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-3xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.problem-card, .solution-card {
+    padding: var(--space-xl);
+    border-radius: var(--radius-xl);
+    text-align: left;
+}
+
+.problem-card {
+    background: #fef2f2;
+    border-left: 4px solid #ef4444;
+}
+
+.solution-card {
+    background: #f0fdf4;
+    border-left: 4px solid #22c55e;
+}
+
+.problem-card h3, .solution-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    color: var(--text-primary);
+}
+
+.problem-card ul, .solution-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.problem-card li, .solution-card li {
+    padding: var(--space-xs) 0;
+    position: relative;
+    padding-left: var(--space-lg);
+    color: var(--text-secondary);
+}
+
+.problem-card li::before {
+    content: '❌';
+    position: absolute;
+    left: 0;
+    font-size: 0.875rem;
+}
+
+.solution-card li::before {
+    content: '✅';
+    position: absolute;
+    left: 0;
+    font-size: 0.875rem;
+}
+
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -590,6 +649,41 @@ section {
 }
 
 .download .section-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.social-proof {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xl);
+    margin: var(--space-xl) 0;
+}
+
+.proof-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.proof-icon {
+    font-size: var(--font-size-lg);
+}
+
+.risk-free {
+    margin-top: var(--space-xl);
+    padding: var(--space-md);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.risk-free p {
+    margin: 0;
+    font-size: var(--font-size-sm);
     color: rgba(255, 255, 255, 0.9);
 }
 
@@ -803,6 +897,11 @@ section {
         grid-template-columns: 1fr;
     }
     
+    .problem-solution {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+    }
+    
     .step {
         flex-direction: column;
         text-align: center;
@@ -830,6 +929,12 @@ section {
     .download-info {
         flex-direction: column;
         gap: var(--space-md);
+    }
+    
+    .social-proof {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
     }
     
     .footer-content {
