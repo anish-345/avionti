@@ -52,6 +52,12 @@
       ]
     }
   ],
+  "rewrites": [
+    {
+      "source": "/app-ads.txt",
+      "destination": "/PicToPDF/app-ads.txt"
+    }
+  ],
   "redirects": [
     {
       "source": "/",
