@@ -1,0 +1,68 @@
+{
+  "name": "PicToPDF - India's #1 Offline PDF Maker",
+  "short_name": "PicToPDF",
+  "description": "Transform your photos into professional PDFs with AI enhancement. 100% offline, privacy-first approach.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#6366F1",
+  "theme_color": "#6366F1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./assets/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "./assets/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["productivity", "utilities", "business"],
+  "lang": "en-IN",
+  "dir": "ltr",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "./assets/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "./assets/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Download App",
+      "short_name": "Download",
+      "description": "Download PicToPDF from app stores",
+      "url": "/#download",
+      "icons": [
+        {
+          "src": "./assets/app-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Features",
+      "short_name": "Features",
+      "description": "View app features",
+      "url": "/#features",
+      "icons": [
+        {
+          "src": "./assets/app-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
