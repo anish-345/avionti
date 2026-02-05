@@ -191,7 +191,7 @@ To update your website:
 
 If you need help with deployment:
 
-- **Email**: support@pictopdf.app
+- **Email**: akshishpok@gmail.com
 - **Documentation**: Check this README.md
 - **Vercel Support**: Use Vercel's help center
 

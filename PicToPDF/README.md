@@ -120,7 +120,7 @@ This website is deployed on Vercel. To deploy your own version:
 
 - **App Store**: [Google Play Store](https://play.google.com/store/apps/details?id=com.avionti.PicToPDF)
 - **Website**: [pictopdf.vercel.app](https://pictopdf.vercel.app)
-- **Support**: support@pictopdf.app
+- **Support**: akshishpok@gmail.com
 
 ## 📝 License
 
