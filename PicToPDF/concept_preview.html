@@ -24,6 +24,11 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -33,6 +38,8 @@
             overflow-x: hidden;
             height: 800vh;
             /* Extended for more precise screen matching */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .viewport {
@@ -50,29 +57,33 @@
             transform: translate(-50%, -50%);
             transform-style: preserve-3d;
             z-index: 100;
+            will-change: transform;
         }
 
         .phone-master {
-            width: 300px;
-            height: 620px;
+            width: min(300px, 80vw);
+            height: min(620px, 70vh);
             transform-style: preserve-3d;
             position: relative;
+            will-change: transform;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .phone-case {
             position: absolute;
             inset: 0;
             background: #0a0a0a;
-            border-radius: 48px;
+            border-radius: clamp(24px, 5vw, 48px);
             border: 2px solid #1a1a1a;
             box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
             z-index: 5;
+            transition: box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .screen-layer {
             position: absolute;
-            inset: 12px;
-            border-radius: 36px;
+            inset: clamp(6px, 2vw, 12px);
+            border-radius: clamp(18px, 4vw, 36px);
             overflow: hidden;
             background: #000;
             z-index: 10;
@@ -84,7 +95,8 @@
             object-fit: cover;
             position: absolute;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity;
         }
 
         .app-img.active {
@@ -107,25 +119,28 @@
             opacity: 0;
             transform: translateY(30px);
             position: absolute;
-            max-width: 600px;
-            padding: 0 40px;
+            max-width: min(600px, 90vw);
+            padding: clamp(20px, 5vw, 40px);
+            width: 100%;
+            will-change: opacity, transform;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .title-text {
-            font-size: clamp(32px, 5vw, 48px);
+            font-size: clamp(20px, 4vw, 48px);
             font-weight: 800;
             line-height: 1.2;
-            letter-spacing: -1.5px;
-            margin-bottom: 10px;
+            letter-spacing: clamp(-1px, -0.2vw, -1.5px);
+            margin-bottom: clamp(5px, 2vw, 10px);
         }
 
         .sub-tag {
-            font-size: 14px;
+            font-size: clamp(10px, 2vw, 14px);
             color: var(--secondary);
-            letter-spacing: 5px;
+            letter-spacing: clamp(2px, 1vw, 5px);
             text-transform: uppercase;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: clamp(3px, 1vw, 5px);
             display: block;
         }
 
@@ -146,8 +161,8 @@
         /* Ambient Lighting */
         .glow {
             position: absolute;
-            width: 600px;
-            height: 600px;
+            width: min(600px, 80vw);
+            height: min(600px, 80vw);
             background: radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent 70%);
             top: -100px;
             left: -100px;
@@ -176,6 +191,7 @@
             border-radius: 50%;
             opacity: 0;
             filter: blur(1px);
+            will-change: transform, opacity;
         }
 
         /* Animated Background Grid */
@@ -188,6 +204,7 @@
             background-size: 50px 50px;
             z-index: 1;
             animation: gridMove 20s linear infinite;
+            will-change: transform;
         }
 
         @keyframes gridMove {
@@ -199,15 +216,16 @@
         .float-element {
             position: absolute;
             border-radius: 50%;
-            filter: blur(60px);
+            filter: blur(clamp(30px, 8vw, 60px));
             opacity: 0.15;
             z-index: 2;
             animation: float 8s ease-in-out infinite;
+            will-change: transform;
         }
 
         .float-1 {
-            width: 300px;
-            height: 300px;
+            width: min(300px, 40vw);
+            height: min(300px, 40vw);
             background: var(--primary);
             top: 10%;
             left: 10%;
@@ -215,8 +233,8 @@
         }
 
         .float-2 {
-            width: 400px;
-            height: 400px;
+            width: min(400px, 50vw);
+            height: min(400px, 50vw);
             background: var(--secondary);
             bottom: 10%;
             right: 10%;
@@ -224,8 +242,8 @@
         }
 
         .float-3 {
-            width: 250px;
-            height: 250px;
+            width: min(250px, 35vw);
+            height: min(250px, 35vw);
             background: #ec4899;
             top: 50%;
             right: 20%;
@@ -233,9 +251,33 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -30px) rotate(120deg); }
-            66% { transform: translate(-30px, 30px) rotate(240deg); }
+            0%, 100% { 
+                transform: translate(0, 0) rotate(0deg); 
+            }
+            33% { 
+                transform: translate(30px, -30px) rotate(120deg); 
+            }
+            66% { 
+                transform: translate(-30px, 30px) rotate(240deg); 
+            }
+        }
+
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .float-element,
+            .particle,
+            .grid-bg,
+            .glow {
+                animation: none !important;
+            }
         }
 
         /* Screen Shine Effect */
@@ -261,27 +303,28 @@
             position: absolute;
             inset: -2px;
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3));
-            border-radius: 48px;
+            border-radius: clamp(24px, 5vw, 48px);
             opacity: 0;
             transition: opacity 0.5s ease;
             z-index: -1;
         }
 
-        .phone-master:hover .phone-case::before {
-            opacity: 1;
+        @media (hover: hover) {
+            .phone-master:hover .phone-case::before {
+                opacity: 1;
+            }
         }
 
         /* Caption Animation Enhancements */
         .caption-block {
             backdrop-filter: blur(10px);
             background: rgba(0, 0, 0, 0.3);
-            padding: 30px 40px;
-            border-radius: 20px;
+            border-radius: clamp(10px, 3vw, 20px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .title-text {
-            text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            text-shadow: 0 0 clamp(15px, 3vw, 30px) rgba(139, 92, 246, 0.5);
         }
 
         /* Ripple Effect */
@@ -304,6 +347,23 @@
             z-index: 1000;
             transform-origin: left;
             box-shadow: 0 0 10px var(--primary);
+            will-change: transform;
+        }
+
+        /* Performance optimizations */
+        .viewport,
+        .stage,
+        .phone-master,
+        .screen-layer {
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        /* Smooth scrolling for all browsers */
+        @supports (scroll-behavior: smooth) {
+            html {
+                scroll-behavior: smooth;
+            }
         }
     </style>
 </head>
