@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicToPDF - Narrative Accurate Commercial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
+    <style>
+        :root {
+            --bg: #020202;
+            --primary: #8b5cf6;
+            --secondary: #06b6d4;
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            height: 800vh;
+            /* Extended for more precise screen matching */
+        }
+
+        .viewport {
+            position: fixed;
+            inset: 0;
+            perspective: 2000px;
+            overflow: hidden;
+        }
+
+        /* 📱 Fixed Center Stage */
+        .stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transform-style: preserve-3d;
+            z-index: 100;
+        }
+
+        .phone-master {
+            width: 300px;
+            height: 620px;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .phone-case {
+            position: absolute;
+            inset: 0;
+            background: #0a0a0a;
+            border-radius: 48px;
+            border: 2px solid #1a1a1a;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
+            z-index: 5;
+        }
+
+        .screen-layer {
+            position: absolute;
+            inset: 12px;
+            border-radius: 36px;
+            overflow: hidden;
+            background: #000;
+            z-index: 10;
+        }
+
+        .app-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .app-img.active {
+            opacity: 1;
+        }
+
+        /* 🎙️ Narrative Captions */
+        .captions-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            pointer-events: none;
+        }
+
+        .caption-block {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            position: absolute;
+            max-width: 600px;
+            padding: 0 40px;
+        }
+
+        .title-text {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -1.5px;
+            margin-bottom: 10px;
+        }
+
+        .sub-tag {
+            font-size: 14px;
+            color: var(--secondary);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .gradient {
+            background: linear-gradient(135deg, #fff, var(--primary), var(--secondary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Ambient Lighting */
+        .glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent 70%);
+            top: -100px;
+            left: -100px;
+            z-index: 1;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        /* Particle System */
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(1px);
+        }
+
+        /* Animated Background Grid */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating Elements */
+        .float-element {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            z-index: 2;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .float-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .float-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .float-3 {
+            width: 250px;
+            height: 250px;
+            background: #ec4899;
+            top: 50%;
+            right: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-30px, 30px) rotate(240deg); }
+        }
+
+        /* Screen Shine Effect */
+        .screen-shine {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.1) 45%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.1) 55%,
+                transparent 100%
+            );
+            transform: translateX(-100%);
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Enhanced Phone Case with Depth */
+        .phone-case::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3));
+            border-radius: 48px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
+
+        .phone-master:hover .phone-case::before {
+            opacity: 1;
+        }
+
+        /* Caption Animation Enhancements */
+        .caption-block {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .title-text {
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Loading Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: 1000;
+            transform-origin: left;
+            box-shadow: 0 0 10px var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="grid-bg"></div>
+    <div class="glow"></div>
+    <div class="float-element float-1"></div>
+    <div class="float-element float-2"></div>
+    <div class="float-element float-3"></div>
+    <div class="particles" id="particleContainer"></div>
+
+    <main class="viewport">
+        <div class="captions-overlay">
+            <div class="caption-block" id="c1">
+                <span class="sub-tag">The App</span>
+                <h1 class="title-text">Turn any photo into a <span class="gradient">professional PDF</span> in seconds
+                    with Pic2PDF.</h1>
+            </div>
+            <div class="caption-block" id="c2">
+                <span class="sub-tag">The Scan</span>
+                <h1 class="title-text">Effortless <span class="gradient">scanning.</span></h1>
+            </div>
+            <div class="caption-block" id="c3">
+                <span class="sub-tag">The Edit</span>
+                <h1 class="title-text"><span class="gradient">Precision crop</span> and optimization.</h1>
+            </div>
+            <div class="caption-block" id="c4">
+                <span class="sub-tag">The Growth</span>
+                <h1 class="title-text">Compress with <span class="gradient">total privacy.</span></h1>
+            </div>
+            <div class="caption-block" id="c5">
+                <span class="sub-tag">Your Workflow</span>
+                <h1 class="title-text">Fully <span class="gradient">customizable</span> for you.</h1>
+            </div>
+            <div class="caption-block" id="c6">
+                <span class="sub-tag">The Future</span>
+                <h1 class="title-text">Download today. <span class="gradient">Your mobile office</span>, simplified!
+                </h1>
+            </div>
+        </div>
+
+        <div class="stage" id="phone-stage">
+            <div class="phone-master" id="phone-unit">
+                <div class="phone-case"></div>
+                <div class="screen-layer">
+                    <div class="screen-shine" id="screenShine"></div>
+                    <img src="https://avionti.vercel.app/PicToPDF/assets/phone-mockup.png" class="app-img active"
+                        id="img0">
+                    <img src="https://avionti.vercel.app/PicToPDF/assets/step-1.png" class="app-img" id="img1">
+                    <img src="https://avionti.vercel.app/PicToPDF/assets/step-2.png" class="app-img" id="img2">
+                    <img src="https://avionti.vercel.app/PicToPDF/assets/step-3.png" class="app-img" id="img3">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+        const stage = document.getElementById('phone-stage');
+        const phone = document.getElementById('phone-unit');
+        const screenShine = document.getElementById('screenShine');
+        const progressBar = document.getElementById('progressBar');
+
+        // Particle System
+        function createParticles() {
+            const container = document.getElementById('particleContainer');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                container.appendChild(particle);
+
+                gsap.to(particle, {
+                    y: -100 - Math.random() * 200,
+                    x: (Math.random() - 0.5) * 100,
+                    opacity: Math.random() * 0.5 + 0.3,
+                    duration: 3 + Math.random() * 4,
+                    repeat: -1,
+                    delay: Math.random() * 3,
+                    ease: "power1.inOut"
+                });
+            }
+        }
+        createParticles();
+
+        // Screen Shine Animation
+        function triggerShine() {
+            gsap.fromTo(screenShine, 
+                { x: '-100%' },
+                { 
+                    x: '100%', 
+                    duration: 1.5, 
+                    ease: "power2.inOut",
+                    repeat: -1,
+                    repeatDelay: 3
+                }
+            );
+        }
+        triggerShine();
+
+        // Progress Bar
+        gsap.to(progressBar, {
+            scaleX: 1,
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.3
+            }
+        });
+
+        // Ripple Effect on Click
+        document.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            document.body.appendChild(ripple);
+
+            gsap.fromTo(ripple,
+                { width: 0, height: 0, opacity: 1 },
+                { 
+                    width: 300, 
+                    height: 300, 
+                    opacity: 0, 
+                    duration: 1,
+                    ease: "power2.out",
+                    onComplete: () => ripple.remove()
+                }
+            );
+        });
+
+        // Master Animation Sequence with Enhanced Effects
+        const main = gsap.timeline({
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1,
+            }
+        });
+
+        // 🎬 1. INTRO: "Turn any photo..." -> Hero Mockup
+        main.to("#c1", { 
+            opacity: 1, 
+            y: 0, 
+            scale: 1,
+            duration: 1,
+            ease: "back.out(1.7)"
+        })
+        .to(stage, { 
+            rotationY: -15, 
+            z: 200, 
+            duration: 2,
+            ease: "power2.inOut"
+        }, "-=1")
+        .to(phone, {
+            boxShadow: "0 50px 100px rgba(139, 92, 246, 0.5)",
+            duration: 2
+        }, "-=2")
+        .to("#c1", { 
+            opacity: 0, 
+            y: -30, 
+            scale: 0.95,
+            duration: 0.8, 
+            delay: 1 
+        })
+
+        // 🎬 2. THE SCAN: "Scan..." -> Step 1
+        .to("#img0", { 
+            opacity: 0, 
+            scale: 0.9,
+            duration: 0.5,
+            ease: "power2.in"
+        })
+        .to("#img1", { 
+            opacity: 1, 
+            scale: 1,
+            duration: 0.5,
+            ease: "power2.out"
+        }, "-=0.5")
+        .to(stage, { 
+            x: -300, 
+            rotationY: 20, 
+            duration: 2,
+            ease: "elastic.out(1, 0.5)"
+        }, "-=0.5")
+        .to("#c2", { 
+            opacity: 1, 
+            y: 0,
+            scale: 1,
+            duration: 1,
+            ease: "back.out(1.7)"
+        }, "-=1.5")
+        .to("#c2", { 
+            opacity: 0, 
+            duration: 0.8, 
+            delay: 1 
+        })
+
+        // 🎬 3. THE CROP: "...crop..." -> Step 2
+        .to("#img1", { 
+            opacity: 0, 
+            rotationY: 90,
+            duration: 0.5,
+            ease: "power2.in"
+        })
+        .to("#img2", { 
+            opacity: 1, 
+            rotationY: 0,
+            duration: 0.5,
+            ease: "power2.out"
+        }, "-=0.25")
+        .to(stage, { 
+            x: 300, 
+            rotationY: -20, 
+            scale: 1.1, 
+            duration: 2,
+            ease: "power3.inOut"
+        }, "-=0.5")
+        .to(phone, {
+            filter: "brightness(1.2)",
+            duration: 2
+        }, "-=2")
+        .to("#c3", { 
+            opacity: 1, 
+            y: 0,
+            scale: 1,
+            duration: 1,
+            ease: "back.out(1.7)"
+        }, "-=1.5")
+        .to("#c3", { 
+            opacity: 0, 
+            duration: 0.8, 
+            delay: 1 
+        })
+
+        // 🎬 4. THE COMPRESS/PRIVACY: "...compress with total privacy." -> Step 3
+        .to("#img2", { 
+            opacity: 0, 
+            scale: 1.2,
+            duration: 0.5,
+            ease: "power2.in"
+        })
+        .to("#img3", { 
+            opacity: 1, 
+            scale: 1,
+            duration: 0.5,
+            ease: "back.out(1.7)"
+        }, "-=0.5")
+        .to(stage, { 
+            x: 0, 
+            rotationY: 0, 
+            z: 300, 
+            duration: 2,
+            ease: "power2.inOut"
+        }, "-=0.5")
+        .to(phone, {
+            boxShadow: "0 60px 120px rgba(6, 182, 212, 0.6)",
+            duration: 2
+        }, "-=2")
+        .to("#c4", { 
+            opacity: 1, 
+            y: 0,
+            scale: 1,
+            duration: 1,
+            ease: "back.out(1.7)"
+        }, "-=1.5")
+        .to("#c4", { 
+            opacity: 0, 
+            duration: 0.8, 
+            delay: 1 
+        })
+
+        // 🎬 5. CUSTOMIZABLE: "Fast, secure... customizable" -> Keep Step 3
+        .to(stage, { 
+            rotationX: 10, 
+            scale: 1.2, 
+            duration: 2,
+            ease: "power2.inOut"
+        })
+        .to(phone, {
+            rotationZ: 5,
+            duration: 2,
+            ease: "sine.inOut"
+        }, "-=2")
+        .to("#c5", { 
+            opacity: 1, 
+            y: 0,
+            scale: 1,
+            duration: 1,
+            ease: "back.out(1.7)"
+        }, "-=1.5")
+        .to("#c5", { 
+            opacity: 0, 
+            duration: 0.8, 
+            delay: 1 
+        })
+
+        // 🎬 6. FINALE: "Download today..." -> Hero Mockup
+        .to("#img3", { 
+            opacity: 0, 
+            scale: 0.8,
+            rotationY: -90,
+            duration: 0.5,
+            ease: "power2.in"
+        })
+        .to("#img0", { 
+            opacity: 1, 
+            scale: 1,
+            rotationY: 0,
+            duration: 0.5,
+            ease: "back.out(1.7)"
+        }, "-=0.25")
+        .to(stage, { 
+            scale: 1, 
+            rotationX: 0, 
+            rotationZ: 0,
+            z: 0, 
+            duration: 2,
+            ease: "power3.out"
+        })
+        .to(phone, {
+            boxShadow: "0 40px 80px rgba(139, 92, 246, 0.8)",
+            filter: "brightness(1)",
+            duration: 2
+        }, "-=2")
+        .to("#c6", { 
+            opacity: 1, 
+            y: 0,
+            scale: 1,
+            duration: 1,
+            ease: "back.out(1.7)"
+        }, "-=1");
+
+        // Enhanced Parallax Interaction with Magnetic Effect
+        let mouseX = 0, mouseY = 0;
+        let currentX = 0, currentY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX - window.innerWidth / 2) / 80;
+            mouseY = (e.clientY - window.innerHeight / 2) / 80;
+        });
+
+        gsap.ticker.add(() => {
+            currentX += (mouseX - currentX) * 0.1;
+            currentY += (mouseY - currentY) * 0.1;
+            
+            gsap.to(phone, {
+                rotationY: currentX,
+                rotationX: -currentY,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+
+            gsap.to('.float-element', {
+                x: currentX * 2,
+                y: currentY * 2,
+                duration: 1,
+                ease: "power2.out"
+            });
+        });
+
+        // Hover Effects on Phone
+        phone.addEventListener('mouseenter', () => {
+            gsap.to(phone, {
+                scale: 1.05,
+                duration: 0.5,
+                ease: "back.out(1.7)"
+            });
+        });
+
+        phone.addEventListener('mouseleave', () => {
+            gsap.to(phone, {
+                scale: 1,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        });
+
+        // Ambient Glow Animation
+        gsap.to('.glow', {
+            x: 100,
+            y: 100,
+            duration: 8,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+    </script>
+</body>
+
+</html>
