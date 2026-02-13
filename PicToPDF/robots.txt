@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://avionti.vercel.app/PicToPDF/sitemap.xml
+Sitemap: https://avionti.in/PicToPDF/sitemap.xml
 
 # Disallow admin or private areas (if any)
 # Disallow: /admin/
