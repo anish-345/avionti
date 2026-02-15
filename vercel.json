@@ -56,6 +56,10 @@
     {
       "source": "/app-ads.txt",
       "destination": "/PicToPDF/app-ads.txt"
+    },
+    {
+      "source": "/.well-known/assetlinks.json",
+      "destination": "/.well-known/assetlinks.json"
     }
   ],
   "redirects": [
