@@ -59,7 +59,7 @@
     },
     {
       "source": "/.well-known/assetlinks.json",
-      "destination": "/.well-known/assetlinks.json"
+      "destination": "/PicToPDF/.well-known/assetlinks.json"
     }
   ],
   "redirects": [
