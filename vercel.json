@@ -69,6 +69,10 @@
     {
       "source": "/.well-known/assetlinks.json",
       "destination": "/PicToPDF/.well-known/assetlinks.json"
+    },
+    {
+      "source": "/(freetrial|settings|pdfs|reset).*",
+      "destination": "/PicToPDF/index.html"
     }
   ],
   "redirects": [
